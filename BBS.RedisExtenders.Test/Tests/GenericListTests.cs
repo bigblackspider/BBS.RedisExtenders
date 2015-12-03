@@ -43,6 +43,11 @@ namespace BBS.RedisExtenders.Test.Tests
             Assert.AreEqual(lis.Count, tst.Count);
             Assert.AreEqual(100, tst.Count);
 
+            //********** Find 
+            tst = new List<WebSite>();
+            tst.RedisFind(o => o.DomainName.Contains("7"));
+            Assert.AreEqual(19, tst.Count);
+
             //********** Update 
             foreach (var site in lis.Where(o => o.DomainName.Contains("5")))
                 site.Status = TSiteStatus.Closed;

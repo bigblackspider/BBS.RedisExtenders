@@ -23,9 +23,19 @@ namespace BBS.RedisExtenders.Extenders
             if (list != null)
             {
                 var db = Redis.GetDatabase();
-                var setName = typeof(T).Name;
+                var setName = typeof (T).Name;
                 list.AddRange(db.SetMembers(setName).Select(o => JsonConvert.DeserializeObject<T>(o)));
-            }   
+            }
+        }
+
+        public static void RedisFind<T>(this List<T> list, Func<T, bool> predicate)
+        {
+            if (list != null)
+            {
+                var db = Redis.GetDatabase();
+                var setName = typeof (T).Name;
+                list.AddRange(db.SetMembers(setName).Select(o => JsonConvert.DeserializeObject<T>(o)).Where(predicate));
+            }
         }
 
         public static void RedisAdd<T>(this List<T> list, T item)
@@ -68,7 +78,7 @@ namespace BBS.RedisExtenders.Extenders
             try
             {
                 var db = Redis.GetDatabase();
-                var keyName = typeof(T).Name + "Key";
+                var keyName = typeof (T).Name + "Key";
                 return db.HashIncrement(keyName, 1);
             }
             catch (Exception)
